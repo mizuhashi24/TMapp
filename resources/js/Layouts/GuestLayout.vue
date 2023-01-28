@@ -5,9 +5,11 @@ import { Link } from '@inertiajs/inertia-vue3';
 
 <template>
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-        <div>
-            <Link href="/">
-                <ApplicationLogo class="w-20 h-20 fill-current text-gray-500" />
+        <div class="shrink-0 flex items-center">
+            <Link href="/" class="h-full">
+                <ApplicationLogo
+                    class="block h-full fill-current text-gray-800"
+                />
             </Link>
         </div>
 

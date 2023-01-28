@@ -5,6 +5,9 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use App\Http\Controllers\TimerController;
+use App\Http\Controllers\SelectedTimerController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,6 +18,10 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::patch('/timers/toggle', [SelectedTimerController::class, 'toggle'])->middleware(['auth', 'verified']);
+Route::resource('timers', TimerController::class)->middleware(['auth', 'verified']);
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [

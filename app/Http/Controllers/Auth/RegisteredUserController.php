@@ -14,6 +14,10 @@ use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
 
+use App\Models\Timer;
+use App\Models\SelectedTimer;
+use Illuminate\Support\Facades\DB;
+
 class RegisteredUserController extends Controller
 {
     /**
@@ -46,6 +50,19 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
+
+        $userId = Auth::id();
+        Timer::create([
+            'user_id' => $userId,
+            'name' => 'タイマー',
+            'set_seconds' => 5400,
+        ]);
+
+        $timerId = DB::table('timers')->select('id')->where('user_id', $userId)->get();
+        SelectedTimer::create([
+            'user_id' => $userId,
+            'timer_id' => $timerId[0]->id,
+        ]);
 
         return redirect(RouteServiceProvider::HOME);
     }
