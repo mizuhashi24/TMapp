@@ -27,7 +27,7 @@ defineProps({
                                 <div class="container px-5 py-24 mx-auto">
                                     <div class="flex flex-col text-center w-full mb-6">
                                         <img src="/images/logo_rect_M.png" class="h-full bg-white">
-                                        <p class="lg:w-2/3 mx-auto leading-relaxed text-base">テストデプロイ中</p>
+                                        <p class="lg:w-2/3 mx-auto leading-relaxed text-base">テストデプロイ中<br>(タイマーのみ実装)</p>
                                     </div>
 
                                     <div v-if="canLogin" class="flex flex-col">
