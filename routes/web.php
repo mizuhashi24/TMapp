@@ -19,6 +19,7 @@ use App\Http\Controllers\SelectedTimerController;
 |
 */
 
+Route::patch('/timers/reset', [SelectedTimerController::class, 'reset'])->middleware(['auth', 'verified']);
 Route::patch('/timers/toggle', [SelectedTimerController::class, 'toggle'])->middleware(['auth', 'verified']);
 Route::resource('timers', TimerController::class)->middleware(['auth', 'verified']);
 

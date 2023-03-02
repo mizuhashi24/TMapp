@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('memo')->nullable();
             $table->unsignedInteger('set_seconds')->default(0);
-            $table->unsignedInteger('total_seconds')->default(0);
-            $table->unsignedInteger('used_seconds')->default(0);
+            $table->unsignedBigInteger('total_seconds')->default(0);
+            $table->unsignedBigInteger('used_seconds')->default(0);
             $table->boolean('status')->default(FALSE);
             $table->timestamps();
         });

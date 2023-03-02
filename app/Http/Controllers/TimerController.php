@@ -94,7 +94,18 @@ class TimerController extends Controller
      */
     public function update(UpdateTimerRequest $request, Timer $timer)
     {
-        //
+        $userId = Auth::id();
+
+        $timer = Timer::where('user_id', $userId)->firstOrFail();
+        $timer->name = $request->name;
+        $timer->memo = $request->memo;
+        $timer->set_seconds = $request->setSeconds;
+        $timer->save();
+
+
+        to_route('timers.index')->with([
+            'message' => 'タイマーを更新しました。',
+        ]);
     }
 
     /**

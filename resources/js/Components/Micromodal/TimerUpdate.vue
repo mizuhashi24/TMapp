@@ -1,16 +1,13 @@
 <script setup>
 import { reactive, onMounted, computed } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
-import BreezeValisationErrors from '@/Components/ValidationErrors.vue';
-import ShowFlashMessages from '@/Components/ShowFlashMessages.vue';
 
-onMounted(() => {
-    MicroModal.init({
-    disableScroll: true,
-    awaitOpenAnimation: true,
-    awaitCloseAnimation: true,
-})
-})
+const props = defineProps({
+    timer: Object,
+    status: Number
+});
+
+const emit = defineEmits(['update:showSeconds'])
 
 const form = reactive({
     name: null,
@@ -20,42 +17,82 @@ const form = reactive({
     seconds: 0
 })
 
+let status = props.status;
+computed(() => {
+    return props.status;
+})
+const settingButton = document.getElementById('settingButton');
+const toggleSettingButton = () => {
+    if (status === 0) {
+        settingButton.dataset.micromodalTrigger = "modal-2";
+        settingButton.disabled = null;
+    } else {
+        settingButton.dataset.micromodalTrigger = null;
+        settingButton.disabled = "disabled";
+    }
+}
+
 const setSeconds = computed(() => {
     return form.hours * 3600 + form.minutes * 60 + form.seconds * 1
 })
 
-const storeTimer = () => {
-    const timerAttributes = {
-        name: form.name, memo: form.memo, setSeconds: form.hours * 3600 + form.minutes * 60 + form.seconds * 1
+const updateTimer = () => {
+    if (setSeconds.value === 0) {
+        const timerAttributes = {
+            name: form.name, memo: form.memo, setSeconds: form.hours * 3600 + form.minutes * 60 + form.seconds * 1
+        }
+        MicroModal.close('modal-2')
+        Inertia.patch(route('timers.update', props.timer.timerId), timerAttributes)
+    } else {
+        const timerAttributes = {
+            name: form.name, memo: form.memo, setSeconds: form.hours * 3600 + form.minutes * 60 + form.seconds * 1
+        }
+        MicroModal.close('modal-2')
+        emit('update:showSeconds', timerAttributes.setSeconds * 1000)
+        Inertia.patch(route('timers.update', props.timer.timerId), timerAttributes)
     }
-    MicroModal.close('modal-1')
-    Inertia.post('/timers', timerAttributes)
+    
 }
+
+const isStatus = computed(() => {
+    return 
+})
+
+onMounted(() => {
+    MicroModal.init({
+    disableScroll: true,
+    awaitOpenAnimation: true,
+    awaitCloseAnimation: true,
+    }),
+    form.name = props.timer.name,
+    form.memo = props.timer.memo,
+    form.hours = Math.floor(props.timer.setSeconds / 3600),
+    form.minutes = Math.floor((props.timer.setSeconds % 3600) / 60),
+    form.seconds = props.timer.setSeconds % 60 % 60
+})
 
 </script>
 
 <template>
     
     <div class="flex justify-start">
-    <BreezeValisationErrors />
-    <ShowFlashMessages />
     </div>  
-    <div class="modal micromodal-slide z-50" id="modal-1" area-hidden="true">
+    <div class="modal micromodal-slide z-50" id="modal-2" area-hidden="true">
         <div class="modal__overlay" tabindex="-1">
-            <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+            <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-2-title">
                 <header class="modal__header">
-                    <h2 class="modal__title" id="modal-1-title">
+                    <h2 class="modal__title" id="modal-2-title">
                     </h2>
                     <button type="button" class="modal__close" aria-label="Close modal" data-micromodal-close></button>
                 </header>
-                <main class="modal__content" id="modal-1-content">
+                <main class="modal__content" id="modal-2-content">
                     <section class="text-gray-600 body-font relative">
                         <div class="container px-5 py-12 mx-auto">
                             <div class="flex flex-col text-center w-full mb-6">
-                                <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Create New Timer</h1>
+                                <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Setting Timer</h1>
                             </div>
                             
-                            <form @submit.prevent="storeTimer">
+                            <form @submit.prevent="updateTimer">
                                 <div class="lg:w-1/2 md:w-2/3 mx-auto">
                                     <div class="flex flex-wrap -m-2">
                                         <div class="p-2 w-full">
@@ -84,7 +121,7 @@ const storeTimer = () => {
                                             </div>
                                         </div>
                                         <div class="p-2 w-full">
-                                            <button @click="storeTimer" type="button" class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 mt-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">Create</button>
+                                            <button @click="updateTimer" type="button" class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 mt-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">Update</button>
                                         </div>
                                     </div>
                                 </div>
@@ -98,6 +135,6 @@ const storeTimer = () => {
         </div>
     </div>
     <div class="flex items-center">
-        <button type="button" data-micromodal-trigger="modal-1" class="text-white bg-gray-500 border-0 w-full md:w-40 h-16 py-2 px-8 mt-4 md:mt-0 md:ml-6 focus:outline-none hover:bg-gray-600 active:bg-gray-700 rounded text-lg whitespace-nowrap" href='javascript:;' >+ New</button>
+        <button id="settingButton" type="button" data-micromodal-trigger="modal-2" class="text-white bg-gray-500 border-0 w-full md:w-40 h-16 py-2 px-8 mt-4 md:mt-0 md:ml-6 focus:outline-none hover:bg-gray-600 active:bg-gray-700 rounded text-lg whitespace-nowrap" href='javascript:;' >SETTING</button>
     </div>
 </template>

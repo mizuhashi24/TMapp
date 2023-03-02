@@ -6,10 +6,13 @@ import { ref, reactive, onMounted, computed } from 'vue';
 import TimerCreate from '@/Components/Micromodal/TimerCreate.vue';
 import Timer from '@/Components/Timer.vue';
 
+
 const props = defineProps({
     timers: Array,
     selectedTimer: Array,
 });
+
+const timers = computed(() => { return props.timers })
 
 const selectedTimer = reactive({
     timerId: props.selectedTimer[0].timer_id,
@@ -17,6 +20,11 @@ const selectedTimer = reactive({
     passedTime: props.selectedTimer[0].passed_time,
     status: props.selectedTimer[0].status,
 });
+selectedTimer.timerId = computed(() => { return props.selectedTimer[0].timer_id })
+selectedTimer.startTime = computed(() => { return props.selectedTimer[0].start_time })
+selectedTimer.passedTime = computed(() => { return props.selectedTimer[0].passed_time })
+selectedTimer.status = computed(() => { return props.selectedTimer[0].status })
+
 
 
 
@@ -37,13 +45,12 @@ const selectedTimer = reactive({
                     <section class="text-gray-600 body-font">
                         <div class="container px-5 pb-10 mx-auto flex flex-wrap">
                             <div class="flex justify-end lg:w-2/3 mx-auto py-2 my-2 w-full">
-                                <!-- <button @click="toggleCreateTimerStatus" class="text-white bg-emerald-500 border-0 py-2 px-8 focus:outline-none hover:bg-emerald-600 rounded text-lg">+ New</button> -->
-                                <TimerCreate />
+                                <!-- <TimerCreate /> -->
                             </div>
                             <Micromodal  />
                             <div class="lg:w-2/3 mx-auto">
-                                <Timer :selectedTimer="selectedTimer" :timers="props.timers" />
-                                <div class="flex flex-wrap -mx-2">
+                                <Timer :selectedTimer="selectedTimer" :timers="timers" />
+                                <!-- <div class="flex flex-wrap -mx-2">
                                     <div class="px-2 w-1/2">
                                         <div class="flex flex-wrap w-full bg-gray-100 sm:py-24 py-16 sm:px-10 px-6 relative">
                                             <img alt="gallery" class="w-full object-cover h-full object-center block opacity-25 absolute inset-0" src="https://dummyimage.com/542x460">
@@ -72,7 +79,7 @@ const selectedTimer = reactive({
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </section>
