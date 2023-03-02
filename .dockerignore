@@ -1,5 +1,5 @@
 # vendor/
-node_modules/
-.dockerignore
-.gitignore
-.git
+# node_modules/
+# .dockerignore
+# .gitignore
+# .git
