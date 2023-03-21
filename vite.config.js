@@ -5,7 +5,10 @@ import vue from '@vitejs/plugin-vue';
 export default defineConfig({
     plugins: [
         laravel({
-            input: 'resources/js/app.js',
+            input: [
+                'resources/sass/app.scss',
+                'resources/js/app.js',
+            ],
             refresh: true,
         }),
         vue({
@@ -14,10 +17,12 @@ export default defineConfig({
                     base: null,
                     includeAbsolute: false,
                 },
-                compilerOptions: {
-                    isCustomElement: (tag) => ['Micromodal'].includes(tag),
-                },
             },
         }),
     ],
+    resolve: {
+        alias: {
+            vue: 'vue/dist/vue.esm-bundler.js',
+        },
+    },
 });
